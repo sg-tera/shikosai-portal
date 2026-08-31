@@ -65,7 +65,7 @@ jobs:
             cd "$GITHUB_WORKSPACE"
           fi
 
-          rsync -a --delete "$GITHUB_WORKSPACE/dist/" /tmp/publish/
+          rsync -a --delete --exclude='.git' "$GITHUB_WORKSPACE/dist/" /tmp/publish/
 
           cd /tmp/publish
           git add -A
