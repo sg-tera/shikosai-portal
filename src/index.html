@@ -5,10 +5,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding-bottom: 70px;
+            min-width: 350px;
+        }
+
+        h2 {
+            text-align: left;
+            padding-left: 1em;
+        }
+
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background-color: blanchedalmond;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #e0e0e0;
+            z-index: 1000;
+        }
+
+        .nav-bar a {
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 12px;
+            /* 楕円 */
+            border: 1px solid brown;
+            border-radius: 9999px;
+            color: brown;
+            min-width: 60px;
+            background-color: azure;
+        }
+
+        .nav-bar .icon {
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .nav-bar a {
+            font-size: 12px;
+        }
+
+        .nav-bar a.current {
+            color: tomato;
+            font-weight: bold;
+        }
+
+        .nav-bar a.current {
+            border-color: tomato;
+            background-color: rgba(255, 99, 71, 0.15);
+        }
+
+        .location h2 {
+            margin-top: 50px;
+            line-height: 0.5;
+        }
+
+        .location p {
+            font-size: 18px;
+            font-weight: bold;
+            color: darkorange;
+            margin-top: 0%;
+            margin-bottom: 0%;
+        }
+
+        .location img {
+            width: 90%;
+            margin-bottom: 1%;
+        }
+
+        .fee h2 {
+            font-size: 24px;
+            line-height: 0.5;
+            margin-bottom: 1%;
+        }
+
+        .fee ul {
+            padding-left: 0;
+            display: inline-block;
+        }
+
+        .fee li {
+            text-align: left;
+            font-size: large;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 50px;
+            gap: 20%;
+        }
+
+        .sns {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .sns img {
+            display: block;
+            width: 100px;
+            height: 100px;
+            opacity: 0.5;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .overlay-text {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            pointer-events: none;
+        }
+    </style>
 </head>
 
 <body>
-    <p>Hello World!</p>
+    <nav class="nav-bar">
+        <a class="current" href="index.html">
+            <span class="icon">🏠</span>
+            <span class="label">トップ</span>
+        </a>
+        <a href="game.html">
+            <span class="icon">🎮️</span>
+            <span class="label">ゲーム一覧</span>
+        </a>
+        <a href="menu.html">
+            <span class="icon">🍔</span>
+            <span class="label">メニュー</span>
+        </a>
+        <a href="gallery.html">
+            <span class="icon">📷</span>
+            <span class="label">ギャラリー</span>
+        </a>
+    </nav>
+    <dev class="name">
+        <h1>### お店の名前 ###</h1>
+    </dev>
+    <section class="concept">
+        <h2>コンセプト</h2>
+        <p>### ここにコンセプトを書く ###</p>
+    </section>
+    <section class="location">
+        <h2>場所</h2>
+        <p>語学演習室（1号館1F）</p>
+        <img alt="location map" src="/img/map.webp">
+    </section>
+    <section class="fee">
+        <h2>料金</h2>
+        <ul>
+            <li>入場料：500円（ワンドリンク制）</li>
+            <li>料理全品：500円均一</li>
+        </ul>
+    </section>
+    <address class="links">
+        <div class="sns">
+            <a href="https://www.instagram.com/5i_boardgame.cafe"><img alt="公式インスタ"
+                    src="/img/Instagram_Glyph_Gradient.svg"></a>
+            <div class="overlay-text">公式SNS (instagram)</div>
+        </div>
+        <div class="sns">
+            <a href="https://www.ibaraki-ct.ac.jp/"><img alt="茨香祭運営HP" src="/img/shikosai-logo.svg"></a>
+            <div class="overlay-text">茨香祭運営HP</div>
+        </div>
+    </address>
+    <footer>©2026 sg-tera</footer>
 </body>
 
 </html>
