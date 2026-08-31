@@ -75,6 +75,7 @@
             grid-template-columns: repeat(auto-fit, minmax(175px, max-content));
             justify-content: center;
             gap: 1em;
+            margin-bottom: 30px;
         }
 
         .item-container {
@@ -112,6 +113,30 @@
             color: #000;
             font-weight: bold;
             pointer-events: none;
+        }
+
+        .allergy table {
+            margin: auto;
+            width: 100%;
+            text-align: center;
+            border-collapse: collapse;
+            border: 2px solid;
+        }
+
+        caption {
+            margin-bottom: 5px;
+        }
+
+        thead,
+        tfoot {
+            background-color: rgb(228, 240, 245);
+        }
+
+        th,
+        td {
+            font-weight: normal;
+            border: 1px solid;
+            padding: 8px, 10px;
         }
     </style>
 </head>
@@ -151,6 +176,27 @@
             <img src="./img/test-onigiri.jpeg">
             <p>おにぎり</p>
         </dev>
+    </section>
+    <section class="allergy">
+        <table>
+            <caption>アレルギー対応表</caption>
+            <thead>
+                <tr>
+                    <th scope="col">メニュー名</th>
+                    <th scope="col">アレルゲン</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">おにぎり</th>
+                    <th>水</th>
+                </tr>
+                <tr>
+                    <th scope="row">いなり</th>
+                    <th>入ってないやん</th>
+                </tr>
+            </tbody>
+        </table>
     </section>
 </body>
 
