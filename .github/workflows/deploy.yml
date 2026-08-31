@@ -41,6 +41,8 @@ jobs:
       - name: Copy non-HTML assets preserving structure
         run: |
           rsync -a --delete --exclude='*.html' src/ dist/
+          mkdir -p dist/img
+          rsync -a --delete img/ dist/img/
 
       - name: Disable Jekyll
         run: touch dist/.nojekyll
