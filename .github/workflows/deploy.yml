@@ -2,39 +2,70 @@ name: Build and Deploy
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: pages-publish
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout main
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Minify HTML & Inline CSS
+      - name: Minify HTML (inline CSS/JS included)
         run: |
-          npx html-minifier-terser \
+          npx --yes html-minifier-terser \
             --input-dir src \
-            --output-dir src \
+            --output-dir dist \
             --file-ext html \
             --collapse-whitespace \
             --remove-comments \
-            --minify-css true
+            --minify-css true \
+            --minify-js true
 
-      - name: Force Push to publish branch
+      - name: Copy non-HTML assets preserving structure
         run: |
+          rsync -a --delete --exclude='*.html' src/ dist/
+
+      - name: Disable Jekyll
+        run: touch dist/.nojekyll
+
+      - name: Publish to publish branch
+        run: |
+          set -eux
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout --orphan publish
+
+          if git ls-remote --exit-code --heads origin publish; then
+            git fetch origin publish
+            git worktree add /tmp/publish origin/publish
+          else
+            git worktree add /tmp/publish
+            cd /tmp/publish
+            git checkout --orphan publish
+            git rm -rf . || true
+            cd "$GITHUB_WORKSPACE"
+          fi
+
+          rsync -a --delete "$GITHUB_WORKSPACE/dist/" /tmp/publish/
+
+          cd /tmp/publish
           git add -A
-          git commit -m "Deploy from main [skip ci]"
-          git push -f origin publish
+          git commit -m "Deploy from ${GITHUB_SHA}" || echo "No changes to commit"
+          git push origin HEAD:publish --force
