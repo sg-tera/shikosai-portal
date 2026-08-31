@@ -30,7 +30,7 @@ jobs:
       - name: Minify HTML (inline CSS/JS included)
         run: |
           npx --yes html-minifier-terser \
-            --input-dir src \
+            --input-dir . \
             --output-dir dist \
             --file-ext html \
             --collapse-whitespace \
@@ -38,9 +38,8 @@ jobs:
             --minify-css true \
             --minify-js true
 
-      - name: Copy non-HTML assets preserving structure
+      - name: Copy image assets to dist
         run: |
-          rsync -a --delete --exclude='*.html' src/ dist/
           mkdir -p dist/img
           rsync -a --delete img/ dist/img/
 
