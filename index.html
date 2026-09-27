@@ -57,39 +57,26 @@
         }
 
         .links {
+            font-style: normal;
+        }
+
+        .sns-container {
+            font-style: normal;
             display: flex;
             flex-direction: row;
             justify-content: center;
-            margin-top: 50px;
+            margin-top: 48px;
             gap: 20%;
-        }
-
-        .sns {
-            width: 100px;
-            height: 100px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
         }
 
         .sns img {
             display: block;
-            width: 100px;
-            height: 100px;
-            opacity: 0.5;
+            width: 80px;
+            height: 80px;
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-        }
-
-        .overlay-text {
-            position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            pointer-events: none;
+            margin-bottom: 32px;
         }
     </style>
 </head>
@@ -133,14 +120,15 @@
         </ul>
     </section>
     <address class="links">
-        <div class="sns">
-            <a href="https://www.instagram.com/5i_boardgame.cafe"><img alt="公式インスタ"
-                    src="./img/Instagram_Glyph_Gradient.webp"></a>
-            <div class="overlay-text">公式SNS (instagram)</div>
-        </div>
-        <div class="sns">
-            <a href="https://34.shikosai.net"><img alt="茨香祭運営HP" src="./img/shikosai-logo.svg"></a>
-            <div class="overlay-text">茨香祭運営HP</div>
+        <h2>リンク</h2>
+        <div class="sns-container">
+            <div class="sns">
+                <a href="https://www.instagram.com/5i_boardgame.cafe"><img alt="公式インスタ"
+                        src="./img/Instagram_Glyph_Gradient.webp"></a>
+            </div>
+            <div class="sns">
+                <a href="https://34.shikosai.net"><img alt="茨香祭運営HP" src="./img/shiko-sai-logo.webp"></a>
+            </div>
         </div>
     </address>
     <footer>©2026 sg-tera</footer>
