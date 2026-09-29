@@ -83,6 +83,64 @@
             font-size: large;
         }
 
+        .game-list {
+            display: grid;
+            gap: 20px;
+            padding-inline: clamp(16px, 4vw, 40px);
+        }
+
+        .game-card {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+            align-items: start;
+            gap: clamp(16px, 4vw, 32px);
+            padding: clamp(16px, 3vw, 28px);
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            text-align: left;
+            overflow-wrap: anywhere;
+        }
+
+        .game-card h3 {
+            margin: 0;
+            font-size: clamp(18px, 2.5vw, 24px);
+            line-height: 1.5;
+        }
+
+        .game-content {
+            min-width: 0;
+            display: grid;
+            justify-items: start;
+            gap: 12px;
+        }
+
+        .game-content p {
+            margin: 0;
+            line-height: 1.8;
+        }
+
+        .game-content a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            color: #2A5934;
+            text-decoration: none;
+        }
+
+        .game-content a:hover,
+        .game-content a:focus-visible {
+            outline: none;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .game-content a svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
         #menu {
             padding: 1px 0 32px;
             margin-top: 50px;
@@ -118,6 +176,7 @@
             inset: 0 0 0 calc(var(--image-size) / 2);
             background-color: #fff;
             z-index: -1;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
         }
 
         .meal img {
@@ -226,6 +285,22 @@
     </section>
     <section id="game">
         <h2>ゲーム</h2>
+        <div class="game-list">
+            <article class="game-card">
+                <h3>花いちもんめ</h3>
+                <div class="game-content">
+                    <p>ほげふが</p>
+                    <p>プレイ人数：4〜8人</p>
+                    <a href="https://www.example.com">
+                        公式サイト
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                            <path d="M14 3h7v7M21 3 10 14M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5" />
+                        </svg>
+                    </a>
+                </div>
+            </article>
+        </div>
     </section>
     <section id="menu">
         <h2>メニュー</h2>
