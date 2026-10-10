@@ -94,6 +94,18 @@
             margin-bottom: 24px;
         }
 
+        .game-heading { display: grid; justify-items: start; gap: 12px; }
+        .game-status { display: grid; justify-items: start; gap: 8px; }
+        .status-badge { padding: 4px 12px; border-radius: 16px; font-size: 14px; font-weight: bold; background: #eee; color: #595959; }
+        .status-badge[data-status="available"] { background: #e5f2e7; color: #24532e; }
+        .status-badge[data-status="in_use"] { background: #fff0d6; color: #754600; }
+        .status-end { font-size: 13px; color: #595959; }
+        .status-controls { margin: 0 16px 24px; font-size: 13px; color: #595959; }
+        #status-message { color: #9b321b; }
+        #status-message:empty { display: none; }
+        #status-refresh { margin-left: 8px; font: inherit; color: #2A5934; cursor: pointer; }
+        #status-refresh:disabled { opacity: .6; cursor: wait; }
+
         .game-card {
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
@@ -289,11 +301,17 @@
             </ul>
         </div>
     </section>
-    <section id="game">
+    <section id="game" data-api-url="https://shikosai-api-staging.sg-tera.workers.dev/v1/status">
         <h2>ゲーム</h2>
         <div class="game-list">
-            <article class="game-card">
-                <h3>花いちもんめ</h3>
+            <article class="game-card" data-game-id="1">
+                <div class="game-heading">
+                    <h3>花いちもんめ</h3>
+                    <div class="game-status" aria-live="polite">
+                        <span class="status-badge" data-status="unknown">未確認</span>
+                        <time class="status-end" hidden></time>
+                    </div>
+                </div>
                 <div class="game-content">
                     <p>ほげふが</p>
                     <p>プレイ人数：4〜8人</p>
@@ -308,8 +326,14 @@
             </article>
         </div>
         <div class="game-list">
-            <article class="game-card">
-                <h3>花いちもんめ</h3>
+            <article class="game-card" data-game-id="2">
+                <div class="game-heading">
+                    <h3>花いちもんめ</h3>
+                    <div class="game-status" aria-live="polite">
+                        <span class="status-badge" data-status="unknown">未確認</span>
+                        <time class="status-end" hidden></time>
+                    </div>
+                </div>
                 <div class="game-content">
                     <p>ほげふが</p>
                     <p>プレイ人数：4〜8人</p>
@@ -322,6 +346,11 @@
                     </a>
                 </div>
             </article>
+        </div>
+        <div class="status-controls">
+            <span>最終取得：<time id="status-updated">未取得</time></span>
+            <button id="status-refresh" type="button">更新</button>
+            <p id="status-message" role="status"></p>
         </div>
     </section>
     <section id="menu">
@@ -376,6 +405,111 @@
         </div>
     </address>
     <footer>©2026 sg-tera</footer>
+    <script id="congestion-script">
+        (() => {
+            const panel = document.getElementById('game');
+            const cards = [...panel.querySelectorAll('.game-card')];
+            const message = document.getElementById('status-message');
+            const updated = document.getElementById('status-updated');
+            const refresh = document.getElementById('status-refresh');
+            const dateFormat = new Intl.DateTimeFormat('ja-JP', {
+                timeZone: 'Asia/Tokyo', month: 'numeric', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+            });
+            let inFlight = false;
+            let hasData = false;
+            let interval = null;
+
+            function validateGames(games) {
+                if (!Array.isArray(games)) throw new Error('Invalid response');
+                const ids = new Set();
+                for (const game of games) {
+                    if (!game || !Number.isInteger(game.gameId) || game.gameId < 1 ||
+                        game.gameId > 2147483647 || ids.has(game.gameId) ||
+                        typeof game.name !== 'string' ||
+                        !['available', 'in_use'].includes(game.status) ||
+                        (game.status === 'available' && game.expectedEndAt !== null) ||
+                        (game.status === 'in_use' && (typeof game.expectedEndAt !== 'string' ||
+                            !Number.isFinite(Date.parse(game.expectedEndAt))))) {
+                        throw new Error('Invalid game');
+                    }
+                    ids.add(game.gameId);
+                }
+                return games;
+            }
+
+            function renderGames(games) {
+                const byId = new Map(games.map(game => [game.gameId, game]));
+                for (const card of cards) {
+                    const game = byId.get(Number(card.dataset.gameId));
+                    const badge = card.querySelector('.status-badge');
+                    const end = card.querySelector('.status-end');
+                    badge.dataset.status = game ? game.status : 'unknown';
+                    badge.textContent = !game ? '未確認' : game.status === 'available' ? '空き' : '利用中';
+                    end.hidden = !game || game.status !== 'in_use';
+                    end.textContent = '';
+                    end.removeAttribute('datetime');
+                    if (!end.hidden) {
+                        end.dateTime = game.expectedEndAt;
+                        end.textContent = `終了予定 ${dateFormat.format(new Date(game.expectedEndAt))}`;
+                    }
+                }
+            }
+
+            async function fetchStatus() {
+                if (inFlight || document.hidden) return;
+                inFlight = true;
+                refresh.disabled = true;
+                refresh.textContent = '取得中…';
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 10000);
+                try {
+                    const response = await fetch(panel.dataset.apiUrl, {
+                        method: 'GET', mode: 'cors', credentials: 'omit',
+                        cache: 'no-store', signal: controller.signal
+                    });
+                    if (!response.ok) throw new Error('Request failed');
+                    const games = validateGames(await response.json());
+                    renderGames(games);
+                    const now = new Date();
+                    updated.dateTime = now.toISOString();
+                    updated.textContent = `${dateFormat.format(now)}（日本時間）`;
+                    hasData = true;
+                    message.textContent = '';
+                    message.dataset.error = 'false';
+                } catch {
+                    message.textContent = hasData ?
+                        '更新できませんでした。前回の情報を表示しています。' :
+                        '混雑状況を取得できませんでした。';
+                    message.dataset.error = 'true';
+                } finally {
+                    clearTimeout(timeout);
+                    inFlight = false;
+                    refresh.disabled = false;
+                    refresh.textContent = '更新';
+                }
+            }
+
+            function resumePolling() {
+                clearInterval(interval);
+                interval = null;
+                if (!document.hidden) {
+                    fetchStatus();
+                    interval = setInterval(fetchStatus, 60000);
+                }
+            }
+            refresh.addEventListener('click', fetchStatus);
+            document.addEventListener('visibilitychange', resumePolling);
+            window.addEventListener('pagehide', () => {
+                clearInterval(interval);
+                interval = null;
+            });
+            window.addEventListener('pageshow', event => {
+                if (event.persisted) resumePolling();
+            });
+            resumePolling();
+        })();
+    </script>
     <script>
         const navBar = document.querySelector('.nav-bar');
         const navLinks = [...navBar.querySelectorAll('a[href^="#"]')];

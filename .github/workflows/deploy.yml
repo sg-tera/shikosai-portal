@@ -27,6 +27,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Test congestion display
+        run: node --test tests/congestion.test.cjs
+
       - name: Minify HTML (inline CSS/JS included)
         run: |
           npx --yes html-minifier-terser \
