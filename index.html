@@ -64,13 +64,13 @@
             font-weight: bold;
             color: darkorange;
             margin-top: 0%;
-            margin-bottom: 0%;
+            margin-bottom: 8px;
         }
 
         .location img {
             width: 90%;
             max-width: 720px;
-            margin-bottom: 1%;
+            margin-bottom: 24px;
         }
 
         .fee h2 {
@@ -94,17 +94,67 @@
             margin-bottom: 24px;
         }
 
-        .game-heading { display: grid; justify-items: start; gap: 12px; }
-        .game-status { display: grid; justify-items: start; gap: 8px; }
-        .status-badge { padding: 4px 12px; border-radius: 16px; font-size: 14px; font-weight: bold; background: #eee; color: #595959; }
-        .status-badge[data-status="available"] { background: #e5f2e7; color: #24532e; }
-        .status-badge[data-status="in_use"] { background: #fff0d6; color: #754600; }
-        .status-end { font-size: 13px; color: #595959; }
-        .status-controls { margin: 0 16px 24px; font-size: 13px; color: #595959; }
-        #status-message { color: #9b321b; }
-        #status-message:empty { display: none; }
-        #status-refresh { margin-left: 8px; font: inherit; color: #2A5934; cursor: pointer; }
-        #status-refresh:disabled { opacity: .6; cursor: wait; }
+        .game-heading {
+            display: grid;
+            justify-items: start;
+            gap: 12px;
+        }
+
+        .game-status {
+            display: grid;
+            justify-items: start;
+            gap: 8px;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: bold;
+            background: #eee;
+            color: #595959;
+        }
+
+        .status-badge[data-status="available"] {
+            background: #e5f2e7;
+            color: #24532e;
+        }
+
+        .status-badge[data-status="in_use"] {
+            background: #fff0d6;
+            color: #754600;
+        }
+
+        .status-end {
+            font-size: 13px;
+            color: #595959;
+        }
+
+        .status-controls {
+            margin: 0 16px 24px;
+            font-size: 13px;
+            color: #595959;
+        }
+
+        #status-message {
+            color: #9b321b;
+        }
+
+        #status-message:empty {
+            display: none;
+        }
+
+        #status-refresh {
+            margin-left: 8px;
+            font: inherit;
+            color: #2A5934;
+            cursor: pointer;
+        }
+
+        #status-refresh:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
 
         .game-card {
             display: grid;
@@ -288,8 +338,10 @@
     <section class="location">
         <h2>場所</h2>
         <div class="container">
-            <p>語学演習室（1号館3F）</p>
-            <img alt="location map" src="./img/map.webp">
+            <p>晴天時：語学演習室（1号館3F）</p>
+            <img alt="location map (sunny)" src="./img/map.webp">
+            <p>雨天時：5I教室（7号館3階）</p>
+            <img alt="location map (rainy)" src="./img/map.webp">
         </div>
     </section>
     <section class="fee">
