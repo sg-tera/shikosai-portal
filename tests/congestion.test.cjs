@@ -9,6 +9,12 @@ const available = { gameId: 1, name: '<img src=x onerror=alert(1)>', status: 'av
 const inUse = { gameId: 2, name: '利用中ゲーム', status: 'in_use', expectedEndAt: '2020-01-01T01:30:00.000Z' };
 const settle = () => new Promise(resolve => setImmediate(resolve));
 
+test('published game cards use eight distinct IDs', () => {
+    const ids = [...html.matchAll(/<article class="game-card" data-game-id="(\d+)"/g)]
+        .map(match => Number(match[1]));
+    assert.deepEqual(ids, [1, 2, 3, 4, 5, 6, 7, 8]);
+});
+
 // Minimal DOM and controlled timers exercise the actual inline script without dependencies.
 function setup(fetcher) {
     const elements = new Map();
