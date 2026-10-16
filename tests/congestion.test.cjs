@@ -38,8 +38,10 @@ function setup(fetcher) {
         badge.textContent = '未確認';
         const end = element();
         end.hidden = true;
-        return { dataset: { gameId: id === null ? '' : String(id) }, badge, end,
-            querySelector: selector => selector === '.status-badge' ? badge : end };
+        return {
+            dataset: { gameId: id === null ? '' : String(id) }, badge, end,
+            querySelector: selector => selector === '.status-badge' ? badge : end
+        };
     });
     panel.querySelectorAll = () => cards;
     elements.set('game', panel);
@@ -76,7 +78,7 @@ test('matches cards by ID, preserves static titles, and keeps overdue games in u
     assert.equal(env.calls[0][1].credentials, 'omit');
     assert.equal(env.calls[0][1].cache, 'no-store');
     assert.equal(html.includes('status-summary'), false);
-    assert.match(html, /<h3>花いちもんめ<\/h3>\s*<div class="game-status"/);
+    assert.match(html, /<article calss="game-card"[^>]*data-game-id="1"[\s\S]*?<h3>[^<]+<\/h3>[\s\S]*?<div calss="game-status"/);
 });
 
 test('initial failure stays unknown; manual fetch can recover with an empty list', async () => {
