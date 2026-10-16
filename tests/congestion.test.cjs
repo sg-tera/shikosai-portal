@@ -27,7 +27,7 @@ function setup(fetcher) {
             addEventListener(type, callback) { this.listeners[type] = callback; }
         };
     }
-    for (const id of ['status-message', 'status-updated', 'status-refresh']) {
+    for (const id of ['status-message', 'status-updated']) {
         elements.set(id, element());
     }
     elements.get('status-updated').textContent = '未取得';
@@ -80,7 +80,7 @@ test('matches cards by ID, preserves static titles, and keeps overdue games in u
     assert.equal(html.includes('status-summary'), false);
 });
 
-test('initial failure stays unknown; manual fetch can recover with an empty list', async () => {
+test('initial failure stays unknown; periodic fetch can recover with an empty list', async () => {
     let fail = true;
     const env = setup(async () => { if (fail) throw new Error('offline'); return response([]); });
     await settle();
@@ -89,7 +89,7 @@ test('initial failure stays unknown; manual fetch can recover with an empty list
     assert.equal(env.elements.get('status-message').dataset.error, 'true');
     assert.equal(env.calls.length, 1);
     fail = false;
-    await env.elements.get('status-refresh').listeners.click();
+    await [...env.intervals.values()][0].callback();
     assert.equal(env.cards[0].badge.textContent, '未確認');
     assert.equal(env.elements.get('status-message').textContent, '');
 });
@@ -109,7 +109,7 @@ test('HTTP, malformed JSON, invalid status, and duplicate ID failures preserve t
         response([{ ...inUse, expectedEndAt: null }])
     ]) {
         next = failure;
-        await env.elements.get('status-refresh').listeners.click();
+        await [...env.intervals.values()][0].callback();
         assert.equal(env.cards[0].badge.textContent, status);
         assert.equal(env.elements.get('status-updated').textContent, timestamp);
         assert.match(env.elements.get('status-message').textContent, /前回の情報/);
@@ -125,7 +125,6 @@ test('polls every 60 seconds, stops while hidden, fetches on return, and restore
     env.document.hidden = true;
     env.events.visibilitychange();
     assert.equal(env.intervals.size, 0);
-    await env.elements.get('status-refresh').listeners.click();
     assert.equal(env.calls.length, 2);
     env.document.hidden = false;
     env.events.visibilitychange();
@@ -140,19 +139,16 @@ test('polls every 60 seconds, stops while hidden, fetches on return, and restore
     assert.equal(env.intervals.size, 1);
 });
 
-test('times out after 10 seconds and blocks overlapping manual and periodic requests', async () => {
+test('times out after 10 seconds and blocks overlapping periodic requests', async () => {
     const env = setup((_url, { signal }) => new Promise((_resolve, reject) => {
         signal.addEventListener('abort', () => reject(new Error('timeout')));
     }));
     const timeout = [...env.timeouts.values()][0];
     assert.equal(timeout.delay, 10000);
-    await env.elements.get('status-refresh').listeners.click();
     await [...env.intervals.values()][0].callback();
     assert.equal(env.calls.length, 1);
-    assert.equal(env.elements.get('status-refresh').disabled, true);
     timeout.callback();
     await settle();
-    assert.equal(env.elements.get('status-refresh').disabled, false);
     assert.equal(env.cards[0].badge.textContent, '未確認');
     assert.equal(env.calls.length, 1);
     assert.equal(env.timeouts.size, 0);

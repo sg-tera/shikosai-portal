@@ -628,8 +628,6 @@
             async function fetchStatus() {
                 if (inFlight || document.hidden) return;
                 inFlight = true;
-                refresh.disabled = true;
-                refresh.textContent = '取得中…';
                 const controller = new AbortController();
                 const timeout = setTimeout(() => controller.abort(), 10000);
                 try {
@@ -654,8 +652,6 @@
                 } finally {
                     clearTimeout(timeout);
                     inFlight = false;
-                    refresh.disabled = false;
-                    refresh.textContent = '更新';
                 }
             }
 
