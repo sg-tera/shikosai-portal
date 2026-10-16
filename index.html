@@ -145,18 +145,6 @@
             display: none;
         }
 
-        #status-refresh {
-            margin-left: 8px;
-            font: inherit;
-            color: #2A5934;
-            cursor: pointer;
-        }
-
-        #status-refresh:disabled {
-            opacity: .6;
-            cursor: wait;
-        }
-
         .game-card {
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
@@ -568,7 +556,6 @@
         </div>
         <div class="status-controls">
             <span>最終取得：<time id="status-updated">未取得</time></span>
-            <button id="status-refresh" type="button">更新</button>
             <p id="status-message" role="status"></p>
         </div>
     </section>
@@ -594,7 +581,6 @@
             const cards = [...panel.querySelectorAll('.game-card')];
             const message = document.getElementById('status-message');
             const updated = document.getElementById('status-updated');
-            const refresh = document.getElementById('status-refresh');
             const dateFormat = new Intl.DateTimeFormat('ja-JP', {
                 timeZone: 'Asia/Tokyo', month: 'numeric', day: 'numeric',
                 hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
@@ -681,7 +667,6 @@
                     interval = setInterval(fetchStatus, 60000);
                 }
             }
-            refresh.addEventListener('click', fetchStatus);
             document.addEventListener('visibilitychange', resumePolling);
             window.addEventListener('pagehide', () => {
                 clearInterval(interval);
