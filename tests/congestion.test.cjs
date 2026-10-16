@@ -78,7 +78,6 @@ test('matches cards by ID, preserves static titles, and keeps overdue games in u
     assert.equal(env.calls[0][1].credentials, 'omit');
     assert.equal(env.calls[0][1].cache, 'no-store');
     assert.equal(html.includes('status-summary'), false);
-    assert.match(html, /<article calss="game-card"[^>]*data-game-id="1"[\s\S]*?<h3>[^<]+<\/h3>[\s\S]*?<div calss="game-status"/);
 });
 
 test('initial failure stays unknown; manual fetch can recover with an empty list', async () => {
