@@ -46,6 +46,9 @@ jobs:
           mkdir -p dist/img
           rsync -a --delete img/ dist/img/
 
+      - name: Copy favicon to dist
+        run: cp favicon.ico dist/favicon.ico
+
       - name: Disable Jekyll
         run: touch dist/.nojekyll
 
