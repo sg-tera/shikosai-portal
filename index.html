@@ -207,6 +207,20 @@
             flex-shrink: 0;
         }
 
+        .time-notice {
+            display: block;
+            text-align: center;
+            width: 80%;
+            height: auto;
+            border-radius: 16px;
+            color: #fff;
+            background-color: #f59d19;
+            margin-bottom: 24px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-block: 0.4rem;
+        }
+
         #menu {
             padding: 1px 0 32px;
             margin-top: 50px;
@@ -399,6 +413,10 @@
 
     <section id="game" data-api-url="https://shikosai-api-staging.sg-tera.workers.dev/v1/status">
         <h2>ゲーム</h2>
+        <div class="time-notice">
+            <p>利用時間は最大30分です。</p>
+            <p>各ゲームの利用状況も合わせてご利用ください。</p>
+        </div>
         <div class="game-list">
             <article class="game-card" data-game-id="1">
                 <div class="game-heading">
