@@ -609,7 +609,6 @@
             });
             let inFlight = false;
             let hasData = false;
-            let interval = null;
 
             function validateGames(games) {
                 if (!Array.isArray(games)) throw new Error('Invalid response');
@@ -677,23 +676,11 @@
                 }
             }
 
-            function resumePolling() {
-                clearInterval(interval);
-                interval = null;
-                if (!document.hidden) {
-                    fetchStatus();
-                    interval = setInterval(fetchStatus, 60000);
-                }
-            }
-            document.addEventListener('visibilitychange', resumePolling);
-            window.addEventListener('pagehide', () => {
-                clearInterval(interval);
-                interval = null;
-            });
+            document.addEventListener('visibilitychange', fetchStatus);
             window.addEventListener('pageshow', event => {
-                if (event.persisted) resumePolling();
+                if (event.persisted) fetchStatus();
             });
-            resumePolling();
+            fetchStatus();
         })();
     </script>
     <script>
