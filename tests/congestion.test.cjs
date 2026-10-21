@@ -80,7 +80,7 @@ test('matches cards by ID, preserves static titles, and keeps overdue games in u
     assert.equal(html.includes('status-summary'), false);
 });
 
-test('initial failure stays unknown; periodic fetch can recover with an empty list', async () => {
+test('initial failure stays unknown; returning to the tab can recover with an empty list', async () => {
     let fail = true;
     const env = setup(async () => { if (fail) throw new Error('offline'); return response([]); });
     await settle();
@@ -89,7 +89,8 @@ test('initial failure stays unknown; periodic fetch can recover with an empty li
     assert.equal(env.elements.get('status-message').dataset.error, 'true');
     assert.equal(env.calls.length, 1);
     fail = false;
-    await [...env.intervals.values()][0].callback();
+    env.events.visibilitychange();
+    await settle();
     assert.equal(env.cards[0].badge.textContent, '未確認');
     assert.equal(env.elements.get('status-message').textContent, '');
 });
@@ -109,43 +110,44 @@ test('HTTP, malformed JSON, invalid status, and duplicate ID failures preserve t
         response([{ ...inUse, expectedEndAt: null }])
     ]) {
         next = failure;
-        await [...env.intervals.values()][0].callback();
+        env.events.visibilitychange();
+        await settle();
         assert.equal(env.cards[0].badge.textContent, status);
         assert.equal(env.elements.get('status-updated').textContent, timestamp);
         assert.match(env.elements.get('status-message').textContent, /前回の情報/);
     }
 });
 
-test('polls every 60 seconds, stops while hidden, fetches on return, and restores after bfcache', async () => {
+test('does not poll, skips hidden tabs, and fetches on return or bfcache restore', async () => {
     const env = setup(async () => response([available]));
     await settle();
-    assert.equal([...env.intervals.values()][0].delay, 60000);
-    await [...env.intervals.values()][0].callback();
-    assert.equal(env.calls.length, 2);
+    assert.equal(env.calls.length, 1);
+    assert.equal(env.intervals.size, 0);
     env.document.hidden = true;
     env.events.visibilitychange();
     assert.equal(env.intervals.size, 0);
-    assert.equal(env.calls.length, 2);
+    assert.equal(env.calls.length, 1);
     env.document.hidden = false;
     env.events.visibilitychange();
     await settle();
-    assert.equal(env.calls.length, 3);
-    assert.equal(env.intervals.size, 1);
-    env.windowEvents.pagehide();
+    assert.equal(env.calls.length, 2);
     assert.equal(env.intervals.size, 0);
+    env.windowEvents.pageshow({ persisted: false });
+    await settle();
+    assert.equal(env.calls.length, 2);
     env.windowEvents.pageshow({ persisted: true });
     await settle();
-    assert.equal(env.calls.length, 4);
-    assert.equal(env.intervals.size, 1);
+    assert.equal(env.calls.length, 3);
+    assert.equal(env.intervals.size, 0);
 });
 
-test('times out after 10 seconds and blocks overlapping periodic requests', async () => {
+test('times out after 10 seconds and blocks overlapping return requests', async () => {
     const env = setup((_url, { signal }) => new Promise((_resolve, reject) => {
         signal.addEventListener('abort', () => reject(new Error('timeout')));
     }));
     const timeout = [...env.timeouts.values()][0];
     assert.equal(timeout.delay, 10000);
-    await [...env.intervals.values()][0].callback();
+    env.events.visibilitychange();
     assert.equal(env.calls.length, 1);
     timeout.callback();
     await settle();
