@@ -5,7 +5,7 @@ const { runInNewContext } = require('node:vm');
 
 const html = readFileSync(`${__dirname}/../index.html`, 'utf8');
 const script = html.match(/<script id="congestion-script">([\s\S]*?)<\/script>/)[1];
-const available = { gameId: 1, name: '<img src=x onerror=alert(1)>', status: 'available', expectedEndAt: null };
+const available = { gameId: 0, name: '<img src=x onerror=alert(1)>', status: 'available', expectedEndAt: null };
 const inUse = { gameId: 2, name: '利用中ゲーム', status: 'in_use', expectedEndAt: '2020-01-01T01:30:00.000Z' };
 const settle = () => new Promise(resolve => setImmediate(resolve));
 
@@ -33,7 +33,7 @@ function setup(fetcher) {
     elements.get('status-updated').textContent = '未取得';
     const panel = element();
     panel.dataset.apiUrl = html.match(/data-api-url="([^"]+)"/)[1];
-    const cards = [1, 2, null].map(id => {
+    const cards = [0, 2, null].map(id => {
         const badge = element();
         badge.textContent = '未確認';
         const end = element();
@@ -74,7 +74,7 @@ test('matches cards by ID, preserves static titles, and keeps overdue games in u
     assert.match(env.cards[1].end.textContent, /10:30:00/);
     assert.equal(env.cards[2].badge.textContent, '未確認');
     assert.match(env.elements.get('status-updated').dateTime, /Z$/);
-    assert.equal(env.calls[0][0], 'https://shikosai-api-staging.sg-tera.workers.dev/v1/status');
+    assert.equal(env.calls[0][0], 'https://shikosai-api.sg-tera.workers.dev/v1/status');
     assert.equal(env.calls[0][1].credentials, 'omit');
     assert.equal(env.calls[0][1].cache, 'no-store');
     assert.equal(html.includes('status-summary'), false);
@@ -105,6 +105,7 @@ test('HTTP, malformed JSON, invalid status, and duplicate ID failures preserve t
         { ok: false },
         { ok: true, json: async () => { throw new SyntaxError(); } },
         response({ games: [available] }),
+        response([{ ...available, gameId: -1 }]),
         response([{ ...available, status: 'unknown' }]),
         response([available, available]),
         response([{ ...inUse, expectedEndAt: null }])

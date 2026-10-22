@@ -413,7 +413,7 @@
         </div>
     </section>
 
-    <section id="game" data-api-url="https://shikosai-api-staging.sg-tera.workers.dev/v1/status">
+    <section id="game" data-api-url="https://shikosai-api.sg-tera.workers.dev/v1/status">
         <h2>ゲーム</h2>
         <div class="time-notice">
             <p>利用時間は最大30分です。</p>
@@ -616,7 +616,7 @@
                 if (!Array.isArray(games)) throw new Error('Invalid response');
                 const ids = new Set();
                 for (const game of games) {
-                    if (!game || !Number.isInteger(game.gameId) || game.gameId < 1 ||
+                    if (!game || !Number.isInteger(game.gameId) || game.gameId < 0 ||
                         game.gameId > 2147483647 || ids.has(game.gameId) ||
                         typeof game.name !== 'string' ||
                         !['available', 'in_use'].includes(game.status) ||
@@ -633,7 +633,7 @@
             function renderGames(games) {
                 const byId = new Map(games.map(game => [game.gameId, game]));
                 for (const card of cards) {
-                    const game = byId.get(Number(card.dataset.gameId));
+                    const game = card.dataset.gameId === '' ? undefined : byId.get(Number(card.dataset.gameId));
                     const badge = card.querySelector('.status-badge');
                     const end = card.querySelector('.status-end');
                     badge.dataset.status = game ? game.status : 'unknown';

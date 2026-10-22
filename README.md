@@ -1,14 +1,14 @@
 # Marico Cafe 来場者サイト
 
-GitHub Pagesで配信する静的サイトです。`index.html`の各ゲーム紹介のタイトル下に、、認証不要の公開API `GET /v1/status` を取得します。
+GitHub Pagesで配信する静的サイトです。`index.html`の各ゲーム紹介のタイトル下に、認証不要の公開API `GET /v1/status` を取得します。
 
 ## 接続先
 
-現在は `https://shikosai-api-staging.sg-tera.workers.dev/v1/status` に接続しています。例示ゲームのテスト環境です。本番APIは未作成です。
+現在は `https://shikosai-api.sg-tera.workers.dev/v1/status` に接続しています。本番DBにはゲームID 0〜7の8件が登録されています。
 
-本番切替時は、`index.html` の `#game` にある `data-api-url` を本番の公開一覧URLに変更し。認証IDは不要です。公開HTMLに認証IDを入れないでください。
+API接続先は`index.html`の`#game`にある`data-api-url`で指定します。公開一覧の取得に認証IDは不要です。公開HTMLに認証IDを入れないでください。
 
-ゲーム紹介の `data-game-id` とAPIの `gameId` を対応させ、タイトルの下に「空き／利用中」と利用中の終了予定を表示します。名前・紹介文・人数・公式リンクは静的HTMLで管理します。現在の「花いちもんめ」2件は既存の例示カードで、検証用にID 1・2を対応させています。実ゲームの紹介へ差し替える際に正しいゲームIDを設定してください。ID未設定・APIに存在しないIDは「未確認」です。
+ゲーム紹介の `data-game-id` とAPIの `gameId` を対応させ、タイトルの下に「空き／利用中」と利用中の終了予定を表示します。名前・紹介文・人数・公式リンクは静的HTMLで管理します。現在の8件のカードには本番DBと同じID 0〜7を設定しています。ID未設定・APIに存在しないIDは「未確認」です。
 
 ## 更新と失敗時の動作
 
