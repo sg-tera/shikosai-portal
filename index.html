@@ -72,6 +72,12 @@
             margin-top: 48px;
         }
 
+        p {
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         .location p {
             font-size: 18px;
             font-weight: bold;
@@ -346,10 +352,8 @@
     <section class="location">
         <h2>場所</h2>
         <div class="container">
-            <p>晴天時：語学演習室（1号館3F）</p>
+            <p>語学演習室（1号館3F）</p>
             <img alt="location map (sunny)" src="./img/1-map.svg">
-            <p>雨天時：5I教室（7号館3階）</p>
-            <img alt="location map (rainy)" src="./img/7-map.svg">
         </div>
     </section>
 
@@ -358,10 +362,11 @@
             <h2>料金</h2>
             <ul>
                 <li>入場料（ワンドリンク付）：300円</li>
-                <li>入場料（ドリンク1本・料理1品付）：500円</li>
-                <li>料理・ドリンク単品：300円均一</li>
+                <li>入場料（ドリンク1本・料理1品付）：400円</li>
+                <li>料理・ドリンク単品：200円均一</li>
             </ul>
             <p>料理・ドリンクのテイクアウトもできます!</p>
+            <p>スタッフが周遊して料理の販売も行いますので、見かけた際はぜひお買い求めください。</p>
             <p>※当店はFesFlowに対応しておりません。</p>
         </div>
     </section>
@@ -379,15 +384,6 @@
         </div>
         <div class="meal-list">
             <article class="meal">
-                <img alt="ハムチーズホットサンド画像" src="./img/IMG_5338.webp">
-                <div class="meal-content">
-                    <h3>ハムチーズホットサンド</h3>
-                    <p>アレルギー物質：小麦、乳製品、豚肉</p>
-                </div>
-            </article>
-        </div>
-        <div class="meal-list">
-            <article class="meal">
                 <img alt="フルーツサンド画像" src="./img/IMG_5243.webp">
                 <div class="meal-content">
                     <h3>フルーツサンド</h3>
@@ -397,6 +393,16 @@
         </div>
         <div class="meal-list">
             <article class="meal">
+                <img alt="ハムチーズホットサンド画像" src="./img/IMG_5338.webp">
+                <div class="meal-content">
+                    <h3>チーズホットサンド</h3>
+                    <p>アレルギー物質：小麦、乳製品</p>
+                </div>
+            </article>
+        </div>
+
+        <div class="meal-list">
+            <article class="meal">
                 <img alt="ラスク画像" src="./img/IMG_5352.webp">
                 <div class="meal-content">
                     <h3>ラスク</h3>
@@ -404,15 +410,7 @@
                 </div>
             </article>
         </div>
-        <div class="meal-list">
-            <article class="meal">
-                <img alt="どら焼き画像" src="./img/IMG_5233.webp">
-                <div class="meal-content">
-                    <h3>どら焼き</h3>
-                    <p>アレルギー物質：小麦、卵、乳製品</p>
-                </div>
-            </article>
-        </div>
+
     </section>
 
     <section id="game" data-api-url="https://shikosai-api.sg-tera.workers.dev/v1/status">
